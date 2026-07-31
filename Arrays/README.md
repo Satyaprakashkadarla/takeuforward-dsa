@@ -3,7 +3,6 @@
 ## Levels
 
 - Basic
-- Easy
 - Medium
 - Hard
 - Expert
