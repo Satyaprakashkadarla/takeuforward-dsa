@@ -13,7 +13,7 @@
 | Difficulty | Solved |
 |------------|--------|
 | Basic | 0 |
-| Easy | 10 |
+| Easy | 11 |
 | Medium | 10 |
 | Hard | 2 |
 | Expert | 0 |
