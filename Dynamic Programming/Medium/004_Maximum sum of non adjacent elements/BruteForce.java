@@ -1,50 +1,53 @@
 /**
- * Problem: Frog Jump
+ * Problem: Maximum Sum of Non-Adjacent Elements
  * Approach: Brute Force (Plain Recursion)
  *
  * Idea:
- *  - Define f(i) = minimum energy needed to reach step i FROM STEP 0.
- *  - To reach step i, the frog's last jump came from either step
- *    (i-1) or step (i-2) (whichever is valid), so:
- *        f(i) = min( f(i-1) + |heights[i]-heights[i-1]|,
- *                    f(i-2) + |heights[i]-heights[i-2]| )   (if i>=2)
- *        f(i) = f(i-1) + |heights[i]-heights[i-1]|           (if i==1)
- *        f(0) = 0
- *  - This recursion, without any memoization, recomputes many
- *    overlapping subproblems repeatedly, leading to exponential
- *    blowup for larger n.
+ *  - Define f(i) = maximum sum achievable using elements from
+ *    nums[0..i], with no two chosen elements adjacent.
+ *  - At each index i, we have two choices:
+ *      1. SKIP nums[i]: best sum is f(i-1) (whatever the best was
+ *         without considering this element at all).
+ *      2. TAKE nums[i]: since we can't also take nums[i-1], the
+ *         best sum is nums[i] + f(i-2).
+ *  - f(i) = max( f(i-1), nums[i] + f(i-2) )
+ *  - Base cases: f(-1) = 0 (no elements), f(0) = nums[0] (only one
+ *    element available, must take it since there's nothing to
+ *    conflict with).
+ *  - Without memoization, this recomputes many overlapping
+ *    subproblems repeatedly, leading to exponential blowup.
  *
- * Time Complexity:  O(2^n) -> each call branches into up to 2 more
- *                    calls, with no caching of repeated subproblems
+ * Time Complexity:  O(2^n) -> each call branches into 2 more calls,
+ *                    with no caching of repeated subproblems
  * Space Complexity: O(n)   -> maximum recursion stack depth
  */
 public class Bruteforce {
 
-    public int frogJump(int[] heights) {
-        return solve(heights, heights.length - 1);
+    public int nonAdjacent(int[] nums) {
+        return solve(nums, nums.length - 1);
     }
 
-    private int solve(int[] heights, int i) {
-        if (i == 0) return 0;
-        if (i == 1) return solve(heights, 0) + Math.abs(heights[1] - heights[0]);
+    private int solve(int[] nums, int i) {
+        if (i < 0) return 0;
+        if (i == 0) return nums[0];
 
-        int oneStep = solve(heights, i - 1) + Math.abs(heights[i] - heights[i - 1]);
-        int twoStep = solve(heights, i - 2) + Math.abs(heights[i] - heights[i - 2]);
+        int skip = solve(nums, i - 1);
+        int take = nums[i] + solve(nums, i - 2);
 
-        return Math.min(oneStep, twoStep);
+        return Math.max(skip, take);
     }
 
     // Simple test driver
     public static void main(String[] args) {
         Bruteforce solution = new Bruteforce();
 
-        int[] h1 = {2, 1, 3, 5, 4};
-        System.out.println(solution.frogJump(h1));  // Expected: 2
+        int[] nums1 = {1, 2, 4};
+        System.out.println(solution.nonAdjacent(nums1));  // Expected: 5
 
-        int[] h2 = {7, 5, 1, 2, 6};
-        System.out.println(solution.frogJump(h2));  // Expected: 9
+        int[] nums2 = {2, 1, 4, 9};
+        System.out.println(solution.nonAdjacent(nums2));  // Expected: 11
 
-        int[] h3 = {3, 10, 3, 11, 3};
-        System.out.println(solution.frogJump(h3));  // Expected: 0
+        int[] nums3 = {1, 7, 16, 8};
+        System.out.println(solution.nonAdjacent(nums3));  // Expected: 17
     }
 }
