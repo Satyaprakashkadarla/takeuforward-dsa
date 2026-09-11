@@ -1,4 +1,4 @@
-# Frog Jump
+# Maximum Sum of Non-Adjacent Elements
 
 **Difficulty:** Medium
 **Tags:** Dynamic Programming
@@ -6,35 +6,36 @@
 
 ## Problem Statement
 
-A frog wants to climb a staircase with `n` steps. Given an integer array `heights`, where `heights[i]` is the height of the `i`th step, the frog can jump from step `i` to step `i+1` or step `i+2` (if it exists), at a cost of `abs(heights[i] - heights[j])`. Return the minimum total energy required to go from step `0` to step `n-1`.
+Given an integer array `nums` of size `n`, return the maximum sum possible using elements of `nums` such that no two chosen elements are adjacent in `nums`.
 
 ## Examples
 
 ### Example 1
 ```
-Input:  heights = [2,1,3,5,4]
-Output: 2
-Explanation: 0→2 (cost 1), 2→4 (cost 1). Total = 2.
+Input:  nums = [1,2,4]
+Output: 5
+Explanation: Pick 1 and 4 (not adjacent) -> sum = 5.
 ```
 
 ### Example 2
 ```
-Input:  heights = [7,5,1,2,6]
-Output: 9
-Explanation: 0→1 (cost 2), 1→3 (cost 3), 3→4 (cost 4). Total = 9.
+Input:  nums = [2,1,4,9]
+Output: 11
+Explanation: Pick 2 and 9 -> sum = 11.
 ```
 
 ### Your Turn
 ```
-Input:  heights = [3,10,3,11,3]
-Output: 0
-Explanation: 0→2 (cost |3-3|=0), 2→4 (cost |3-3|=0). Total = 0.
+Input:  nums = [1,7,16,8]
+Output: 17
+Explanation: Pick 1 and 16 -> sum = 17.
 ```
 
 ## Constraints
 
-- `1 <= n <= 10^4`
-- `0 <= heights[i] <= 10^4`
+- `n == nums.length`
+- `1 <= n <= 10^5`
+- `0 <= nums[i] <= 1000`
 
 ## Files in this Repo
 
@@ -62,4 +63,4 @@ java Optimal
 
 ## Key Takeaway
 
-`dp[i]` = minimum energy to reach step `i`. Since the frog can only arrive at step `i` from step `i-1` or step `i-2`, `dp[i] = min(dp[i-1] + cost(i-1,i), dp[i-2] + cost(i-2,i))`. Because each state only depends on the previous two, we can track just two rolling variables instead of a full array — the same space-optimization pattern as Climbing Stairs.
+This is the classic **"House Robber"** pattern: for each element, either **take it** (add its value to the best result 2 positions back, since the previous element must be skipped) or **skip it** (keep the best result 1 position back). `dp[i] = max(dp[i-1], dp[i-2] + nums[i])`. Same "look back 1 or 2" DP shape as Climbing Stairs and Frog Jump, just with `max` instead of `min`/`sum`.
