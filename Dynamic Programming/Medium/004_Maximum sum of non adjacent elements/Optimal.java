@@ -1,44 +1,42 @@
 /**
- * Problem: Frog Jump
+ * Problem: Maximum Sum of Non-Adjacent Elements
  * Approach: Optimal - Iterative Dynamic Programming (O(1) Space)
  *
  * Idea:
- *  - Same recurrence as the brute force (dp[i] = min energy to reach
- *    step i from step 0), but computed ITERATIVELY from the bottom
- *    up, avoiding all the repeated recursive work.
+ *  - Same recurrence as the brute force:
+ *        dp[i] = max( dp[i-1], nums[i] + dp[i-2] )
+ *    computed ITERATIVELY from the bottom up instead of recursively.
  *
- *  - Since dp[i] only ever depends on dp[i-1] and dp[i-2], we don't
- *    need a full array - just two rolling variables (prev1, prev2)
- *    that get updated as we iterate forward, exactly like the
- *    space-optimized Climbing Stairs / Fibonacci pattern.
+ *  - Since dp[i] only ever depends on dp[i-1] and dp[i-2], we track
+ *    just two rolling variables (prev1, prev2) instead of a full
+ *    array - the same space-optimization pattern used in Climbing
+ *    Stairs and Frog Jump.
  *
- *  - At each step i:
- *      oneStep = prev1 + |heights[i] - heights[i-1]|
- *      twoStep = prev2 + |heights[i] - heights[i-2]|   (only if i > 1)
- *      current = min(oneStep, twoStep)
+ *  - At each index i:
+ *      skip = prev1               (best sum without taking nums[i])
+ *      take = nums[i] + prev2     (best sum including nums[i])
+ *      current = max(skip, take)
  *    then shift the rolling window forward.
+ *
+ *  - Base cases: prev2 = 0 (representing "no elements considered"),
+ *    prev1 = nums[0] (best sum considering only the first element).
  *
  * Time Complexity:  O(n) -> single pass through the array
  * Space Complexity: O(1) -> only two variables tracked at any time
  */
 class Solution {
-    public int frogJump(int[] heights) {
-        int n = heights.length;
+    public int nonAdjacent(int[] nums) {
+        int n = nums.length;
+        if (n == 0) return 0;
+        if (n == 1) return nums[0];
 
-        if (n <= 1) return 0;
-
-        int prev2 = 0; // dp[i-2]
-        int prev1 = 0; // dp[i-1]
+        int prev2 = 0;          // dp[i-2], starts as "no elements"
+        int prev1 = nums[0];    // dp[i-1], best sum using just nums[0]
 
         for (int i = 1; i < n; i++) {
-            int oneStep = prev1 + Math.abs(heights[i] - heights[i - 1]);
-
-            int twoStep = Integer.MAX_VALUE;
-            if (i > 1) {
-                twoStep = prev2 + Math.abs(heights[i] - heights[i - 2]);
-            }
-
-            int current = Math.min(oneStep, twoStep);
+            int skip = prev1;
+            int take = nums[i] + prev2;
+            int current = Math.max(skip, take);
 
             prev2 = prev1;
             prev1 = current;
@@ -51,13 +49,13 @@ class Solution {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        int[] h1 = {2, 1, 3, 5, 4};
-        System.out.println(solution.frogJump(h1));  // Expected: 2
+        int[] nums1 = {1, 2, 4};
+        System.out.println(solution.nonAdjacent(nums1));  // Expected: 5
 
-        int[] h2 = {7, 5, 1, 2, 6};
-        System.out.println(solution.frogJump(h2));  // Expected: 9
+        int[] nums2 = {2, 1, 4, 9};
+        System.out.println(solution.nonAdjacent(nums2));  // Expected: 11
 
-        int[] h3 = {3, 10, 3, 11, 3};
-        System.out.println(solution.frogJump(h3));  // Expected: 0
+        int[] nums3 = {1, 7, 16, 8};
+        System.out.println(solution.nonAdjacent(nums3));  // Expected: 17
     }
 }
