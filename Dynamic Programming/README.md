@@ -15,6 +15,6 @@
 |------------|--------|
 | Basic | 0 |
 | Easy | 0 |
-| Medium | 3 |
+| Medium | 5 |
 | Hard |  |
 | Expert |  |
