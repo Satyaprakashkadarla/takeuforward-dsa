@@ -14,7 +14,7 @@
 | Difficulty | Solved |
 |------------|--------|
 | Basic | 0 |
-| Easy | 6 |
+| Easy | 7 |
 | Medium | 11 |
 | Hard | 3 |
 | Expert |  |
