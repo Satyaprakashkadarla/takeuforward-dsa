@@ -17,4 +17,4 @@
 | Easy | 9 |
 | Medium | 11 |
 | Hard | 10 |
-| Expert | 1 |
+| Expert | 2 |
